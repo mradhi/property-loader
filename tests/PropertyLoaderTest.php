@@ -20,10 +20,15 @@ class PropertyLoaderTest extends TestCase
 
         $propertyLoader = new PropertyLoader(new AnnotationLoader(new AnnotationReader()));
 
-        $propertyLoader->load($object, function (Loader $loader, ExecutionContextInterface $context) {
+        $propertyLoader->load($object, function (Loader $loader, ExecutionContextInterface $context) use ($object, $propertyLoader) {
             if (!$loader instanceof Load\Gmail) {
                 return;
             }
+
+            $this->assertSame($object, $context->getObject());
+            $this->assertSame('email', $context->getTargetPropertyMetadata()->getPropertyName());
+            $this->assertSame('Guennichi\PropertyLoader\Tests\Foo', $context->getClassMetadata()->getClassName());
+            $this->assertSame($propertyLoader, $context->getPropertyLoader());
 
             $sourceProperty = $context->getClassMetadata()->getReflectionClass()->getProperty($loader->source);
             $object = $context->getObject();
