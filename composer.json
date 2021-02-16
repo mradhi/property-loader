@@ -15,7 +15,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
-        "doctrine/annotations": "^1.11"
+        "doctrine/annotations": "^1.11",
+        "php-coveralls/php-coveralls": "^2.4"
     },
     "autoload": {
         "psr-4": {
