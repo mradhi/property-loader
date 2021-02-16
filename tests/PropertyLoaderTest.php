@@ -5,53 +5,36 @@ namespace Guennichi\PropertyLoader\Tests;
 
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Guennichi\PropertyLoader\Loaders\AwareHandler;
-use Guennichi\PropertyLoader\Loaders as Load;
+use Guennichi\PropertyLoader\Context\ExecutionContextInterface;
+use Guennichi\PropertyLoader\Loader;
+use Guennichi\PropertyLoader\Tests\Fixtures\Loaders as Load;
 use Guennichi\PropertyLoader\Mapping\Loader\AnnotationLoader;
 use Guennichi\PropertyLoader\PropertyLoader;
-use Guennichi\PropertyLoader\Tests\Fixtures\Loaders\GmailHandler;
-use Guennichi\PropertyLoader\Tests\Fixtures\Person;
 use PHPUnit\Framework\TestCase;
 
 class PropertyLoaderTest extends TestCase
 {
     public function testLoadProperties(): void
     {
-        $object = new Person('person1', 'person2');
+        $object = new Foo('person1');
 
-        $handlers = [
-            new GmailHandler(),
-            new AwareHandler()
-        ];
+        $propertyLoader = new PropertyLoader(new AnnotationLoader(new AnnotationReader()));
 
-        $propertyLoader = new PropertyLoader(new AnnotationLoader(new AnnotationReader()), $handlers);
-        $propertyLoader->load($object);
+        $propertyLoader->load($object, function (Loader $loader, ExecutionContextInterface $context) {
+            if (!$loader instanceof Load\Gmail) {
+                return;
+            }
+
+            $sourceProperty = $context->getClassMetadata()->getReflectionClass()->getProperty($loader->source);
+            $object = $context->getObject();
+
+            $value = $sourceProperty->getValue($object) . '@gmail.com';
+
+            $context->getTargetPropertyMetadata()->setPropertyValue($value, $object);
+        });
 
         $this->assertSame('person1@gmail.com', $object->email);
-        $this->assertSame('person2@gmail.com', $object->relatedPerson->email);
     }
-}
-
-class Bar
-{
-    public string $person;
-
-    /**
-     * @var string
-     *
-     * @Load\Gmail(source="person")
-     */
-    public string $personEmail;
-
-    public function __construct(string $person)
-    {
-        $this->person = $person;
-    }
-
-    /*public static function configurePropertyLoaderMetadata(ClassMetadata $metadata): void
-    {
-        $metadata->addPropertyLoader('personEmail', new Load\Gmail(['source' => 'person']));
-    }*/
 }
 
 class Foo
@@ -66,20 +49,11 @@ class Foo
     public string $email;
 
     /**
-     * @var Bar
-     *
-     * @Load\Aware()
-     */
-    public Bar $person;
-
-    /**
      * @param string $name
-     * @param Bar $person
      */
-    public function __construct(string $name, Bar $person)
+    public function __construct(string $name)
     {
         $this->name = $name;
-        $this->person = $person;
     }
 
 

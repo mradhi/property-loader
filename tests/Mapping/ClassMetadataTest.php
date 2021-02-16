@@ -4,7 +4,6 @@
 namespace Guennichi\PropertyLoader\Tests\Mapping;
 
 
-use Guennichi\PropertyLoader\Loaders\Aware;
 use Guennichi\PropertyLoader\Mapping\ClassMetadata;
 use Guennichi\PropertyLoader\Tests\Fixtures\Loaders\Gmail;
 use Guennichi\PropertyLoader\Tests\Fixtures\Person;
@@ -32,8 +31,7 @@ class ClassMetadataTest extends TestCase
     {
         $classMetadata = new ClassMetadata(Person::class);
         $classMetadata->addPropertyLoader('email', new Gmail(['source' => 'name']));
-        $classMetadata->addPropertyLoader('relatedPerson', new Aware());
 
-        $this->assertCount(2, $classMetadata->getTargetProperties());
+        $this->assertCount(1, $classMetadata->getTargetProperties());
     }
 }

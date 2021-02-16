@@ -3,7 +3,6 @@
 
 namespace Guennichi\PropertyLoader\Tests\Fixtures;
 
-use Guennichi\PropertyLoader\Loaders\Aware;
 use Guennichi\PropertyLoader\Tests\Fixtures\Loaders as Load;
 
 class Person
@@ -20,18 +19,8 @@ class Person
      */
     public string $email;
 
-    /**
-     * @var Person
-     *
-     * @Aware()
-     */
-    public Person $relatedPerson;
-
-    public function __construct(string $name, ?string $relatedPersonName = null)
+    public function __construct(string $name)
     {
         $this->name = $name;
-        if (null !== $relatedPersonName) {
-            $this->relatedPerson = new Person($relatedPersonName);
-        }
     }
 }

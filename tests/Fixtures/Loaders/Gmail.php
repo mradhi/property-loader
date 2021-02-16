@@ -4,13 +4,13 @@
 namespace Guennichi\PropertyLoader\Tests\Fixtures\Loaders;
 
 
-use Guennichi\PropertyLoader\Loaders\Source;
+use Guennichi\PropertyLoader\Loader;
 
 /**
  * @Annotation
  * @Target("PROPERTY")
  */
-class Gmail extends Source
+class Gmail extends Loader
 {
-
+    public string $source;
 }

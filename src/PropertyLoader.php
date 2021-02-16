@@ -11,6 +11,7 @@
 namespace Guennichi\PropertyLoader;
 
 
+use Closure;
 use Guennichi\PropertyLoader\Context\ExecutionContext;
 use Guennichi\PropertyLoader\Context\ExecutionContextInterface;
 use Guennichi\PropertyLoader\Mapping\Factory\MetadataFactory;
@@ -25,22 +26,15 @@ class PropertyLoader
     private MetadataFactory $metadataFactory;
 
     /**
-     * @var LoaderHandlerInterface[]
-     */
-    private array $handlers;
-
-    /**
      * @var ExecutionContextInterface
      */
     private ExecutionContextInterface $context;
 
     /**
      * @param LoaderInterface|null $mappingLoader
-     * @param array $handlers
      */
-    public function __construct(LoaderInterface $mappingLoader = null, array $handlers = [])
+    public function __construct(LoaderInterface $mappingLoader = null)
     {
-        $this->handlers = $handlers;
         // Initialize the context for this property loader
         $this->context = new ExecutionContext($this);
         $this->metadataFactory = new MetadataFactory($mappingLoader ?? new StaticMethodLoader());
@@ -50,8 +44,9 @@ class PropertyLoader
      * Load properties for a given object.
      *
      * @param object $object
+     * @param Closure $handler
      */
-    public function load(object $object): void
+    public function load(object $object, Closure $handler): void
     {
         $classMetadata = $this->metadataFactory->getMetadataFor($object);
 
@@ -66,11 +61,7 @@ class PropertyLoader
                 ->setTargetPropertyMetadata($targetProperty)
                 ->setLoader($loader);
 
-            foreach ($this->handlers as $handler) {
-                if (get_class($handler) === $loader->handledBy()) {
-                    $handler->handle($loader, $this->context);
-                }
-            }
+            $handler($loader, $this->context);
         }
     }
 }

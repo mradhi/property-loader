@@ -41,7 +41,6 @@ class AnnotationLoaderTest extends TestCase
 
         $expected = new ClassMetadata(Person::class);
         $expected->addPropertyLoader('email', new Gmail(['source' => 'name']));
-        $expected->addPropertyLoader('relatedPerson', new Aware());
 
         // load reflection class so that the comparison passes
         $expected->getReflectionClass();
