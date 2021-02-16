@@ -1,0 +1,24 @@
+language: php
+
+php:
+    - 7.4
+    - 8.0
+
+sudo: false
+
+cache:
+    directories:
+        - $HOME/.composer/cache
+
+before_install:
+    - travis_retry composer self-update
+
+install:
+    - travis_retry composer update --no-interaction
+
+script:
+    - mkdir -p build/logs
+    - XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+
+after_success:
+    - travis_retry php vendor/bin/php-coveralls
