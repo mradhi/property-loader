@@ -106,16 +106,6 @@ class ExecutionContext implements ExecutionContextInterface
     }
 
     /**
-     * Get current loader object.
-     *
-     * @return Loader
-     */
-    public function getLoader(): Loader
-    {
-        return $this->loader;
-    }
-
-    /**
      * @inheritDoc
      */
     public function getObject(): object
