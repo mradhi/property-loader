@@ -1,0 +1,31 @@
+{
+    "name": "guennichi/property-loader",
+    "description": "PHP library to dynamically load object properties",
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://guennichi.com",
+    "authors": [
+        {
+            "name": "Radhi Guennichi",
+            "email": "radhi@guennichi.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "symfony/var-dumper": "^5.2",
+        "doctrine/annotations": "^1.11"
+    },
+    "autoload": {
+        "psr-4": {
+            "Guennichi\\PropertyLoader\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Guennichi\\PropertyLoader\\Tests\\": "tests/"
+        }
+    }
+}
