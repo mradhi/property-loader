@@ -70,16 +70,10 @@ class MetadataFactory
         }
 
         // Include loaders from the parent class
-        $this->mergeLoaders($metadata);
-
-        return $this->loadedClasses[$className] = $metadata;
-    }
-
-    private function mergeLoaders(ClassMetadata $metadata): void
-    {
-        // Include loaders from the parent class
         if ($parent = $metadata->getReflectionClass()->getParentClass()) {
             $metadata->mergePropertyLoaders($this->getMetadataFor($parent->name));
         }
+
+        return $this->loadedClasses[$className] = $metadata;
     }
 }
