@@ -26,16 +26,15 @@ class PropertyLoaderTest extends TestCase
             }
 
             $this->assertSame($object, $context->getObject());
-            $this->assertSame('email', $context->getTargetPropertyMetadata()->getPropertyName());
+            $this->assertSame('email', $context->getPropertyMetadata()->getPropertyName());
             $this->assertSame('Guennichi\PropertyLoader\Tests\Foo', $context->getClassMetadata()->getClassName());
-            $this->assertSame($propertyLoader, $context->getPropertyLoader());
 
             $sourceProperty = $context->getClassMetadata()->getReflectionClass()->getProperty($loader->source);
             $object = $context->getObject();
 
             $value = $sourceProperty->getValue($object) . '@gmail.com';
 
-            $context->getTargetPropertyMetadata()->setPropertyValue($value, $object);
+            $context->getPropertyMetadata()->setPropertyValue($value, $object);
         });
 
         $this->assertSame('person1@gmail.com', $object->email);

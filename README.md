@@ -114,7 +114,7 @@ class EmailHandler extends Guennichi\PropertyLoader\LoaderHandler
 
         $value = $sourceProperty->getValue($object) . '@mail.com';
 
-        $context->getTargetPropertyMetadata()->setPropertyValue($value, $object);
+        $context->getPropertyMetadata()->setPropertyValue($value, $object);
     }
 }
 ```

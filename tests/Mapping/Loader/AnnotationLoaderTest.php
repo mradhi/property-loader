@@ -59,7 +59,7 @@ class AnnotationLoaderTest extends TestCase
         $metadata = new ClassMetadata(Child::class);
 
         // Merge parent metaData
-        $metadata->mergePropertyLoaders($parent_metadata);
+        $metadata->mergeLoaders($parent_metadata);
 
         $loader->loadClassMetadata($metadata);
 
@@ -71,7 +71,7 @@ class AnnotationLoaderTest extends TestCase
 
         $expected = new ClassMetadata(Child::class);
         $expected->addPropertyLoader('foo', new Gmail());
-        $expected->mergePropertyLoaders($expected_parent);
+        $expected->mergeLoaders($expected_parent);
 
         $expected->getReflectionClass();
 

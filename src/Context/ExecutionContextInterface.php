@@ -54,7 +54,7 @@ interface ExecutionContextInterface
      *
      * @return PropertyMetadata
      */
-    public function getTargetPropertyMetadata(): PropertyMetadata;
+    public function getPropertyMetadata(): PropertyMetadata;
 
     /**
      * Get current class metadata
@@ -76,21 +76,14 @@ interface ExecutionContextInterface
     public function setClassMetadata(ClassMetadata $classMetadata): self;
 
     /**
-     * Get the property loader instance.
-     *
-     * @return PropertyLoader
-     */
-    public function getPropertyLoader(): PropertyLoader;
-
-    /**
      * Sets the currently loaded property metadata.
      *
-     * @param PropertyMetadata $targetPropertyMetadata
+     * @param PropertyMetadata $propertyMetadata
      *
      * @return $this
      * @internal Used by the property loader engine. Should not be called by user
      *           code.
      *
      */
-    public function setTargetPropertyMetadata(PropertyMetadata $targetPropertyMetadata): self;
+    public function setPropertyMetadata(PropertyMetadata $propertyMetadata): self;
 }

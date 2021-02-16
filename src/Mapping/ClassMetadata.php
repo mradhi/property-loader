@@ -46,9 +46,9 @@ class ClassMetadata
      *
      * @param ClassMetadata $source
      */
-    public function mergePropertyLoaders(self $source): void
+    public function mergeLoaders(self $source): void
     {
-        foreach ($source->getTargetProperties() as $member) {
+        foreach ($source->getProperties() as $member) {
             $property = $member->getPropertyName();
 
             if (!isset($this->properties[$property])) {
@@ -89,7 +89,7 @@ class ClassMetadata
      *
      * @return PropertyMetadata[]
      */
-    public function getTargetProperties(): array
+    public function getProperties(): array
     {
         return $this->properties;
     }

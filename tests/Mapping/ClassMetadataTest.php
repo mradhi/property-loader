@@ -32,6 +32,6 @@ class ClassMetadataTest extends TestCase
         $classMetadata = new ClassMetadata(Person::class);
         $classMetadata->addPropertyLoader('email', new Gmail(['source' => 'name']));
 
-        $this->assertCount(1, $classMetadata->getTargetProperties());
+        $this->assertCount(1, $classMetadata->getProperties());
     }
 }

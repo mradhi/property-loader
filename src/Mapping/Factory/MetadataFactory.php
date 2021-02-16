@@ -71,7 +71,7 @@ class MetadataFactory
 
         // Include loaders from the parent class
         if ($parent = $metadata->getReflectionClass()->getParentClass()) {
-            $metadata->mergePropertyLoaders($this->getMetadataFor($parent->name));
+            $metadata->mergeLoaders($this->getMetadataFor($parent->name));
         }
 
         return $this->loadedClasses[$className] = $metadata;

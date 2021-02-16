@@ -31,7 +31,7 @@ class ExecutionContext implements ExecutionContextInterface
     /**
      * @var PropertyMetadata
      */
-    private PropertyMetadata $targetPropertyMetadata;
+    private PropertyMetadata $propertyMetadata;
 
     /**
      * @var Loader
@@ -49,14 +49,6 @@ class ExecutionContext implements ExecutionContextInterface
     public function __construct(PropertyLoader $propertyLoader)
     {
         $this->propertyLoader = $propertyLoader;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getPropertyLoader(): PropertyLoader
-    {
-        return $this->propertyLoader;
     }
 
     /**
@@ -80,17 +72,17 @@ class ExecutionContext implements ExecutionContextInterface
     /**
      * @inheritDoc
      */
-    public function getTargetPropertyMetadata(): PropertyMetadata
+    public function getPropertyMetadata(): PropertyMetadata
     {
-        return $this->targetPropertyMetadata;
+        return $this->propertyMetadata;
     }
 
     /**
      * @inheritDoc
      */
-    public function setTargetPropertyMetadata(PropertyMetadata $targetPropertyMetadata): ExecutionContext
+    public function setPropertyMetadata(PropertyMetadata $propertyMetadata): ExecutionContext
     {
-        $this->targetPropertyMetadata = $targetPropertyMetadata;
+        $this->propertyMetadata = $propertyMetadata;
 
         return $this;
     }

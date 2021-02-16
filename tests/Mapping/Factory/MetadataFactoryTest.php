@@ -20,7 +20,7 @@ class MetadataFactoryTest extends TestCase
         $factory = new MetadataFactory($loader);
         $metadata = $factory->getMetadataFor(Child::class);
 
-        $this->assertCount(2, $metadata->getTargetProperties());
+        $this->assertCount(2, $metadata->getProperties());
     }
 
     public function testGetSameMetadataObjectIfCalledMoreThanOne(): void

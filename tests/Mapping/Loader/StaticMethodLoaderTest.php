@@ -44,12 +44,12 @@ class StaticMethodLoaderTest extends TestCase
         $loader = new StaticMethodLoader('loadMetadata');
         $metadata = new ClassMetadata(StaticLoaderDocument::class);
         $loader->loadClassMetadata($metadata);
-        $this->assertCount(0, $metadata->getTargetProperties());
+        $this->assertCount(0, $metadata->getProperties());
 
         $loader = new StaticMethodLoader('loadMetadata');
         $metadata = new ClassMetadata(BaseStaticLoaderDocument::class);
         $loader->loadClassMetadata($metadata);
-        $this->assertCount(1, $metadata->getTargetProperties());
+        $this->assertCount(1, $metadata->getProperties());
     }
 
     public function testLoadClassMetadataIgnoresInterfaces(): void
@@ -59,7 +59,7 @@ class StaticMethodLoaderTest extends TestCase
 
         $loader->loadClassMetadata($metadata);
 
-        $this->assertCount(0, $metadata->getTargetProperties());
+        $this->assertCount(0, $metadata->getProperties());
     }
 
     public function testLoadClassMetadataInAbstractClasses(): void
@@ -69,7 +69,7 @@ class StaticMethodLoaderTest extends TestCase
 
         $loader->loadClassMetadata($metadata);
 
-        $this->assertCount(1, $metadata->getTargetProperties());
+        $this->assertCount(1, $metadata->getProperties());
     }
 
     public function testLoadClassMetadataInNonStaticMethods(): void

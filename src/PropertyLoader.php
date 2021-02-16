@@ -54,11 +54,11 @@ class PropertyLoader
             ->setObject($object)
             ->setClassMetadata($classMetadata);
 
-        foreach ($classMetadata->getTargetProperties() as $targetProperty) {
+        foreach ($classMetadata->getProperties() as $targetProperty) {
             $loader = $targetProperty->getLoader();
 
             $this->context
-                ->setTargetPropertyMetadata($targetProperty)
+                ->setPropertyMetadata($targetProperty)
                 ->setLoader($loader);
 
             $handler($loader, $this->context);
