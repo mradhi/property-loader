@@ -4,6 +4,7 @@
 namespace Guennichi\PropertyLoader\Tests\Mapping\Loader;
 
 
+use Guennichi\PropertyLoader\Exception\MappingException;
 use Guennichi\PropertyLoader\Mapping\ClassMetadata;
 use Guennichi\PropertyLoader\Mapping\Loader\StaticMethodLoader;
 use Guennichi\PropertyLoader\Tests\Fixtures\Loaders\Gmail;
@@ -19,7 +20,7 @@ class StaticMethodLoaderTest extends TestCase
         $this->assertTrue($loader->loadClassMetadata($metadata));
     }
 
-    public function testLoadClassMetadataReturnsFalseIfNotSuccessful()
+    public function testLoadClassMetadataReturnsFalseIfNotSuccessful(): void
     {
         $loader = new StaticMethodLoader('loadMetadata');
         $metadata = new ClassMetadata('\stdClass');
@@ -27,7 +28,7 @@ class StaticMethodLoaderTest extends TestCase
         $this->assertFalse($loader->loadClassMetadata($metadata));
     }
 
-    public function testLoadClassMetadata()
+    public function testLoadClassMetadata(): void
     {
         $loader = new StaticMethodLoader('loadMetadata');
         $metadata = new ClassMetadata(StaticLoaderEntity::class);
@@ -38,7 +39,7 @@ class StaticMethodLoaderTest extends TestCase
     }
 
 
-    public function testLoadClassMetadataDoesNotRepeatLoadWithParentClasses()
+    public function testLoadClassMetadataDoesNotRepeatLoadWithParentClasses(): void
     {
         $loader = new StaticMethodLoader('loadMetadata');
         $metadata = new ClassMetadata(StaticLoaderDocument::class);
@@ -51,7 +52,7 @@ class StaticMethodLoaderTest extends TestCase
         $this->assertCount(1, $metadata->getTargetProperties());
     }
 
-    public function testLoadClassMetadataIgnoresInterfaces()
+    public function testLoadClassMetadataIgnoresInterfaces(): void
     {
         $loader = new StaticMethodLoader('loadMetadata');
         $metadata = new ClassMetadata(StaticLoaderInterface::class);
@@ -61,7 +62,7 @@ class StaticMethodLoaderTest extends TestCase
         $this->assertCount(0, $metadata->getTargetProperties());
     }
 
-    public function testLoadClassMetadataInAbstractClasses()
+    public function testLoadClassMetadataInAbstractClasses(): void
     {
         $loader = new StaticMethodLoader('loadMetadata');
         $metadata = new ClassMetadata(AbstractStaticLoader::class);
@@ -69,6 +70,25 @@ class StaticMethodLoaderTest extends TestCase
         $loader->loadClassMetadata($metadata);
 
         $this->assertCount(1, $metadata->getTargetProperties());
+    }
+
+    public function testLoadClassMetadataInNonStaticMethods(): void
+    {
+        $loader = new StaticMethodLoader('loadMetadata');
+        $metadata = new ClassMetadata(NonStaticLoaderEntity::class);
+
+        $this->expectException(MappingException::class);
+        $this->expectExceptionMessage('The method "Guennichi\PropertyLoader\Tests\Mapping\Loader\NonStaticLoaderEntity::loadMetadata()" should be static.');
+
+        $loader->loadClassMetadata($metadata);
+    }
+
+    public function testLoadClassMetadataInAbstractStaticMethods(): void
+    {
+        $loader = new StaticMethodLoader('loadMetadata');
+        $metadata = new ClassMetadata(AbstractMethodStaticLoader::class);
+
+        $this->assertFalse($loader->loadClassMetadata($metadata));
     }
 }
 
@@ -79,17 +99,32 @@ interface StaticLoaderInterface
 
 abstract class AbstractStaticLoader
 {
-    public static function loadMetadata(ClassMetadata $metadata)
+    public static function loadMetadata(ClassMetadata $metadata): void
     {
         $metadata->addPropertyLoader('foo', new Gmail());
     }
+}
+
+class NonStaticLoaderEntity
+{
+    public static ?ClassMetadata $invokedWith = null;
+
+    public function loadMetadata(ClassMetadata $metadata): void
+    {
+        self::$invokedWith = $metadata;
+    }
+}
+
+abstract class AbstractMethodStaticLoader
+{
+    public abstract static function loadMetadata(ClassMetadata $metadata): void;
 }
 
 class StaticLoaderEntity
 {
     public static ?ClassMetadata $invokedWith = null;
 
-    public static function loadMetadata(ClassMetadata $metadata)
+    public static function loadMetadata(ClassMetadata $metadata): void
     {
         self::$invokedWith = $metadata;
     }

@@ -60,7 +60,7 @@ class MetadataFactory
         }
 
         if (!class_exists($className)) {
-            throw new NoSuchMetadataException(sprintf('The class or interface "%s" does not exist.', $className));
+            throw new NoSuchMetadataException(sprintf('The class "%s" does not exist.', $className));
         }
 
         $metadata = new ClassMetadata($className);
@@ -77,10 +77,6 @@ class MetadataFactory
 
     private function mergeLoaders(ClassMetadata $metadata): void
     {
-        if ($metadata->getReflectionClass()->isInterface()) {
-            return;
-        }
-
         // Include loaders from the parent class
         if ($parent = $metadata->getReflectionClass()->getParentClass()) {
             $metadata->mergePropertyLoaders($this->getMetadataFor($parent->name));
