@@ -20,6 +20,8 @@ class PropertyLoaderTest extends TestCase
 
         $propertyLoader = new PropertyLoader(new AnnotationLoader(new AnnotationReader()));
 
+        $this->assertInstanceOf(ExecutionContextInterface::class, $propertyLoader->getContext());
+
         $propertyLoader->load($object, function (Loader $loader, ExecutionContextInterface $context) use ($object, $propertyLoader) {
             if (!$loader instanceof Load\Gmail) {
                 return;

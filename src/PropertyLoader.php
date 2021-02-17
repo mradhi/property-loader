@@ -64,4 +64,14 @@ class PropertyLoader
             $handler($loader, $this->context);
         }
     }
+
+    /**
+     * Get the current context for this instance.
+     *
+     * @return ExecutionContextInterface
+     */
+    public function getContext()
+    {
+        return $this->context;
+    }
 }
