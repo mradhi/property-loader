@@ -29,6 +29,12 @@ class PropertyLoaderTest extends TestCase
             $this->assertSame('email', $context->getPropertyMetadata()->getPropertyName());
             $this->assertSame('Guennichi\PropertyLoader\Tests\Foo', $context->getClassMetadata()->getClassName());
 
+            // Try to add some attributes to the context
+            $context->addAttribute('foo', 'bar');
+
+            $this->assertSame('bar', $context->getAttribute('foo'));
+            $this->assertNull($context->getAttribute('not_found'));
+
             $sourceProperty = $context->getClassMetadata()->getReflectionClass()->getProperty($loader->source);
             $object = $context->getObject();
 

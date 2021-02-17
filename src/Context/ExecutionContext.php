@@ -44,6 +44,11 @@ class ExecutionContext implements ExecutionContextInterface
     private object $object;
 
     /**
+     * @var array
+     */
+    private array $attributes = [];
+
+    /**
      * @param PropertyLoader $propertyLoader
      */
     public function __construct(PropertyLoader $propertyLoader)
@@ -113,5 +118,29 @@ class ExecutionContext implements ExecutionContextInterface
         $this->object = $object;
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addAttribute(string $name, $value): ExecutionContextInterface
+    {
+        if (!isset($this->attributes[$name])) {
+            $this->attributes[$name] = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAttribute(string $name)
+    {
+        if (isset($this->attributes[$name])) {
+            return $this->attributes[$name];
+        }
+
+        return null;
     }
 }

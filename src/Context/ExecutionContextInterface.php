@@ -86,4 +86,23 @@ interface ExecutionContextInterface
      *
      */
     public function setPropertyMetadata(PropertyMetadata $propertyMetadata): self;
+
+    /**
+     * Add custom attribute to the context.
+     *
+     * @param string $name
+     * @param $value
+     *
+     * @return $this
+     */
+    public function addAttribute(string $name, $value): self;
+
+    /**
+     * Get custom attribute if found in the current context.
+     *
+     * @param string $name
+     *
+     * @return mixed|null
+     */
+    public function getAttribute(string $name);
 }
