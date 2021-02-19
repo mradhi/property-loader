@@ -39,12 +39,8 @@ The entry point of this library is the `Guennichi\PropertyLoader` class.
 $mappingLoader = new Guennichi\PropertyLoader\Mapping\Loader\AnnotationLoader(
     new Doctrine\Common\Annotations\AnnotationReader()
 );
-$handlers = [
-    new Guennichi\PropertyLoader\Loaders\AwareHandler(),
-    // Add your custom handlers...
-];
 
-$propertyLoader = new Guennichi\PropertyLoader\PropertyLoader($mappingLoader, $handlers);
+$propertyLoader = new Guennichi\PropertyLoader\PropertyLoader($mappingLoader);
 ```
 
 #### Create a Custom Property Loader
@@ -92,55 +88,8 @@ In other words, if you create a custom Loader (e.g. `Email`),
 PropertyLoader library will automatically look for another class, 
 `EmailHandler` when actually performing the loading.
 
-The handler class only has one required method `handle()`:
-
-```php
-class EmailHandler extends Guennichi\PropertyLoader\LoaderHandler
-{
-     /**
-     * @inheritDoc
-     *
-     * @param Email $loader
-     */
-    public function handle(Guennichi\PropertyLoader\Loader $loader, Guennichi\PropertyLoader\Context\ExecutionContextInterface $context): void
-    {
-        // Get the sourceProperty reflection object
-        // based on "source" (name of property)
-        $sourceProperty = $context->getClassMetadata()
-        ->getReflectionClass()
-        ->getProperty($loader->source);
-        
-        $object = $context->getObject();
-
-        $value = $sourceProperty->getValue($object) . '@mail.com';
-
-        $context->getPropertyMetadata()->setPropertyValue($value, $object);
-    }
-}
-```
-
-**NOTE:** To reduce complexity of such logic, your handler can extend `Guennichi\Loaders\SourceHandler` class,
-and in that case your handler will be something like:
-
-```php
-class EmailHandler extends Guennichi\PropertyLoader\Loaders\SourceHandler
-{
-    /**
-     * @inheritDoc
-     */
-    public function getTargetValue(
-        $sourceValue, 
-        Guennichi\PropertyLoader\Loaders\Source $loader, 
-        Guennichi\PropertyLoader\Context\ExecutionContextInterface $context
-    ): string
-    {
-        return $sourceValue . '@mail.com';
-    }
-}
-```
-
-Inside `handle()`, you don’t need to return a value. 
-Instead, you set value for target property metadata existed in the context.
+The handler class only has one required method `handle()`, check `guennichi/property-loader-bundle` package
+for more details about handlers.
 
 ##### Using the new Loader
 
@@ -148,7 +97,6 @@ Instead, you set value for target property metadata existed in the context.
 namespace App\DTO;
 
 use App\Loaders as AcmeLoad;
-use Guennichi\PropertyLoader\Loaders as Load;
 
 class Person
 {
@@ -160,11 +108,6 @@ class Person
      * @AcmeLoad\Email(source="name") 
      */
     public string $email;
-
-    /**
-     * @Load\Aware
-     */
-    public SomeOtherObjects $relatedObject;
     // ...
 }
 ```
@@ -183,9 +126,22 @@ $person = new Person();
 $person->name = 'radhi';
 
 // Load properties based on mappings and stored handlers
-$propertyLoader->load($person);
+$propertyLoader->load($person, function (Email $emailLoader, ExecutionContextInterface $context {
+        // Get the sourceProperty reflection object
+        // based on "source" (name of property)
+        $sourceProperty = $context->getClassMetadata()
+        ->getReflectionClass()
+        ->getProperty($emailLoader->source);
+        
+        $object = $context->getObject();
 
-echo $person->email; // radhi@mail.com
+        $value = $sourceProperty->getValue($object) . '@guennichi.com';
+
+        $context->getPropertyMetadata()->setPropertyValue($value, $object);
+});
+
+
+echo $person->email; // radhi@guennichi.com
 ```
 
 ## Supporting PHP >= 7.4
