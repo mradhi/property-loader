@@ -1,6 +1,7 @@
 # Dynamic Property Loader Library
 
 [![Build Status](https://travis-ci.com/mradhi/property-loader.svg?branch=main)](https://travis-ci.com/mradhi/property-loader)
+[![Coverage Status](https://coveralls.io/repos/github/mradhi/property-loader/badge.svg?branch=main)](https://coveralls.io/github/mradhi/property-loader?branch=main)
 
 A PHP library to dynamically load object properties using custom handlers (useful for DTO's). It comes
 with two `ClassMetadata` mapping loaders.
